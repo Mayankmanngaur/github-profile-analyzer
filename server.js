@@ -11,11 +11,42 @@ const pool = mysql.createPool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
+  port: 28286,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
+async function createTableIfNotExist() {
+  const tableQuery = `
+        CREATE TABLE IF NOT EXISTS github_profiles (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(100) UNIQUE NOT NULL,
+            name VARCHAR(100),
+            bio TEXT,
+            public_repos INT DEFAULT 0,
+            followers INT DEFAULT 0,
+            following INT DEFAULT 0,
+            top_languages VARCHAR(255),
+            avg_stars_per_repo DECIMAL(5,2) DEFAULT 0.00,
+            profile_url VARCHAR(255),
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        );
+    `;
+  try {
+    await pool.query(tableQuery);
+    console.log("Database Table Verified / Created Successfully!");
+  } catch (err) {
+    console.error("Table creation error:", err.message);
+  }
+}
+createTableIfNotExist();
+
+// 1. POST: Analyze GitHub Profile & Store/Update
 app.post("/api/analyze/:username", async (req, res) => {
   const { username } = req.params;
 
@@ -131,3 +162,5 @@ app.get("/api/profiles/:username", async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+module.exports = app;
