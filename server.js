@@ -46,6 +46,10 @@ async function createTableIfNotExist() {
 }
 createTableIfNotExist();
 
+app.get("/", (req, res) => {
+  res.redirect("/api/profiles");
+});
+
 // 1. POST: Analyze GitHub Profile & Store/Update
 app.post("/api/analyze/:username", async (req, res) => {
   const { username } = req.params;
