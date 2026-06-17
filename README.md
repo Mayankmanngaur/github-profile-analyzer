@@ -4,7 +4,7 @@ A backend API built using **Node.js, Express.js, MySQL, and GitHub API** that fe
 
 ## Live Demo
 
--🔗 [View Live Project](https://wanderlust-mern-six.vercel.app)
+-🔗 [View Live Project](https://github-profile-analyzer-xi-sable.vercel.app/)
 - **Automatic Redirect:** Accessing the root URL (`/`) will automatically redirect you to the profiles list (`/api/profiles`).
 
 ## Features
